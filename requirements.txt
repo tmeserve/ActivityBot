@@ -1,0 +1,2 @@
+nextcord[voice]==2.0.0b3
+pymongo==4.0.1
