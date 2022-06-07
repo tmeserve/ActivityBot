@@ -2,3 +2,5 @@ secrets.json
 Logs/*
 __pycache__/*
 cogs/commands/__pycache__/*
+cogs/commands/admin/__pycache__/*
+cogs/listeners/__pycache__/*

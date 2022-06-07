@@ -18,6 +18,9 @@ db_string = f'mongodb://{username}:{password}@{IP}'
 client = MongoClient(db_string)
 util.set_mongo(client)
 
+# config = util.load_config()
+# roles = util.load_roles()
+
 intents = nextcord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
@@ -31,16 +34,19 @@ initial_extensions = []
 
 def load_cogs(dir):
     for filename in os.listdir(f'{dir}'):
-        if os.path.isdir(f'./{dir}/{filename}'):
+        if os.path.isdir(f'{dir}/{filename}'):
+            # load_cogs(os.path.join(dir, f'/{filename}'))
             load_cogs(dir + f'/{filename}')
         if filename.endswith('py'):
-            initial_extensions.append(f'cogs.{filename[:-3]}')\
+            tmp = dir.replace('/', '.')
+            initial_extensions.append(f'{tmp}.{filename[:-3]}')
 
 
 if __name__ == '__main__':
-    load_cogs('./cogs')
+    
+    # load_cogs(os.path.join(f'{os.getcwd()}', 'cogs'))
+    load_cogs('cogs')
     for extension in initial_extensions:
-        print(extension)
         bot.load_extension(extension)
 
     bot.run(secrets['discord']['token'])

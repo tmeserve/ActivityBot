@@ -9,7 +9,7 @@ class VCStats(commands.Cog):
     def __init__(self, bot : commands.Bot):
         self.bot = bot
 
-    @nextcord.slash_command(name='vcstats')
+    @nextcord.slash_command(name='vcstats', guild_ids=[TEST_SERVER_ID])
     async def vcstats(self, interaction: Interaction):
         return
 
