@@ -17,11 +17,6 @@ class VC(commands.Cog):
         self.exp_collection = self.db[constants.EXP_COLLECTION]
         self.log_collection = self.db[constants.LOG_COLLECTION]
 
-    def calculate_total_time_in_hours(self, time_in, time_out):
-        dt_time_in = datetime.strptime(time_in)
-        dt_time_out = datetime.strptime(time_out)
-
-
     def afk(self, member : nextcord.Member, before : nextcord.VoiceState or nextcord.StageChannel, after : nextcord.VoiceState or nextcord.StageChannel, time):
         if before.afk and not after.afk:
             self.begin_time(member, time)
@@ -39,11 +34,7 @@ class VC(commands.Cog):
             'time_in': time,
             'time_out': ''
         }
-        res = self.log_collection.insert_one(log_dict)
-        print(res.acknowledged)
-
-        for record in self.log_collection.find():
-            print(record)
+        self.log_collection.insert_one(log_dict)
 
     def end_time(self, member : nextcord.Member, time):
         query = {
@@ -57,11 +48,8 @@ class VC(commands.Cog):
         dt_time_out = datetime.strptime(time, '%Y/%m/%d %H:%M:%S')
 
         dt_total_time = dt_time_out - dt_time_in
-
+        #hours:minutes:seconds
         print(dt_total_time)
-
-        # total_time = dt_total_time.total_hours()
-        # print(total_time, dt_time_in.total_seconds())
     
 
     @commands.Cog.listener()
