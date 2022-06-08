@@ -6,16 +6,17 @@ from nextcord import Interaction
 from nextcord.ext import commands
 
 from pymongo import MongoClient
+import certifi
 
 secrets = util.load_secrets()
 db_secrets = secrets['database']
 IP = db_secrets['IP']
 username = db_secrets['username']
 password = db_secrets['password']
-# db_string = f'mongodb+srv://{username}:{password}@{IP}'
-db_string = f'mongodb://{username}:{password}@{IP}'
+db_string = f'mongodb+srv://{username}:{password}@{IP}'
 
-client = MongoClient(db_string)
+
+client = MongoClient(db_string, tlsCAFile=certifi.where())
 util.set_mongo(client)
 
 # config = util.load_config()

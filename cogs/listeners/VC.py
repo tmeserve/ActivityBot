@@ -39,7 +39,11 @@ class VC(commands.Cog):
             'time_in': time,
             'time_out': ''
         }
-        self.log_collection.insert_one(log_dict)
+        res = self.log_collection.insert_one(log_dict)
+        print(res.acknowledged)
+
+        for record in self.log_collection.find():
+            print(record)
 
     def end_time(self, member : nextcord.Member, time):
         query = {
@@ -49,22 +53,28 @@ class VC(commands.Cog):
         log_doc = self.log_collection.find_one(query)
         time_in = log_doc['time_in']
 
-        dt_time_in = datetime.strptime(time_in)
+        dt_time_in = datetime.strptime(time_in, '%Y/%m/%d %H:%M:%S')
+        dt_time_out = datetime.strptime(time, '%Y/%m/%d %H:%M:%S')
 
-        dt_total_time = time - dt_time_in
+        dt_total_time = dt_time_out - dt_time_in
 
-        total_time = dt_total_time.total_hours()
-        print(total_time, dt_time_in.total_seconds())
+        print(dt_total_time)
+
+        # total_time = dt_total_time.total_hours()
+        # print(total_time, dt_time_in.total_seconds())
     
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member : nextcord.Member, before : nextcord.VoiceState or nextcord.StageChannel, after  : nextcord.VoiceState or nextcord.StageChannel):
         time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
         print('vc update')
+        print(before.channel, 'before channe;')
+        print('')
         if before.channel is None and after.channel is not None:
             print('joined vc')
             val = self.afk(member, before, after, time)
             if val is None:
+                print('val is none')
                 self.begin_time(member, time)
         elif before.channel is not None and after.channel is None:
             print('left vc')
