@@ -1,5 +1,6 @@
 import util, os, logger
 import sys
+from Users import Users
 
 import nextcord
 from nextcord import Interaction
@@ -22,14 +23,14 @@ util.set_mongo(client)
 # config = util.load_config()
 # roles = util.load_roles()
 
-intents = nextcord.Intents.default()
-intents.members = True
+intents = nextcord.Intents.all()
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 @bot.event
 async def on_ready():
     print('ready')
+    util.set_users(Users(bot))
 
 initial_extensions = []
 
